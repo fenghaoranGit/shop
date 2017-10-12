@@ -19,4 +19,5 @@
    例如http://localhost:8080/blog/admin/menu.jsp
  4.在导入控件时，注意版本号！！
  一般而言，参数是用 parameterType=“。。。。”，而返回值类型是用resultMap=“。。。。”
+ 现在我使用git将该项目提交到仓库。
    
