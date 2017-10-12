@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="ssm.blog.dao.BlogTypeDao">
+  	<resultMap type="ssm.blog.entity.BlogType" id="BlogType">
+  	<!-- 主键字段映射 -->
+  		<id property="id" column="id"/>
+  		<!-- 一般字段映射 -->
+  		<result property="typeName" column="typeName"/>
+  		<result property="orderNum" column="orderNum"/>
+  	</resultMap>
+  	<!-- 增加博客类型信息 -->
+  	<insert id="addBlogType" parameterType="BlogType" keyProperty="id" useGeneratedKeys="true">
+  	<!-- 
+  	id是dao包里的方法名称
+  	parameterMap是参数类型，注意不是parameterType，因为这里使用的是restMap的ID
+  	keyProperty主键对应的属性
+  	useGeneratedKeys是否让主键自增，为TRUE则自增
+  	 -->
+  	 insert into t_blogtype 
+  	 <!-- 动态sql拼接，
+  	 prefix是前缀，
+  	 suffix是后缀，
+  	 suffixOverrides除去最后多余的, 
+  	 -->
+  	 <trim prefix="(" suffix=")" suffixOverrides=",">
+  	 	<if test="typeName!=null and typeName!=''">
+  	 		typeName,
+  	 	</if>
+  	 	<if test="orderNum!=null and orderNum!=''">
+  	 		orderNum,
+  	 	</if>
+  	 </trim>
+  	 
+  	 <trim prefix="values(" suffix=")" suffixOverrides=",">
+  	 	<if test="typeName!=null and typeName!=''">
+  	 		#{typeName},
+  	 	</if>
+  	 	<if test="orderNum!=null and orderNum!=''">
+  	 		#{orderNum},
+  	 	</if>
+  	 </trim>
+  	 <!-- 在该例中大量使用了动态sql拼接，检查需要插入的数据，有对应的属性时，
+  	 才增加对应的列，该属性有值时，才添加数据。而且使用<trim></trim>
+  	 可以插入多条数据 -->
+  	</insert>
+  	<!-- 删除博客类型信息 -->
+  	<delete id="deleteBlogType" parameterType="java.lang.Integer">
+  		delete from t_blogtype where id=#{id}
+  	</delete>
+  	
+  	<!-- 更新博客类型信息 -->
+  	<update id="updateBlogType">
+  		update t_blogtype 
+  		<set>
+  			<if test="typeName!=null and typeName !=''">
+  				typeName=#{typeName},
+  			</if>
+  			<if test="orderNum!=null and orderNum!=''">
+  				orderNum=#{orderNum},
+  			</if>
+  		</set>
+  		where id=#{id}
+  	</update>
+  	<!-- 根据ID查询博客类型信息 -->
+  	<select id="getBlogTypeById" parameterType="java.lang.Integer" resultMap="BlogType">
+  		select id,typeName,orderNum from t_blogtype where id=#{id}
+  	</select>
+  	<!-- 根据页码查博客类型信息 -->
+  	<select id="listByPage" resultMap="BlogType">
+  		select id,typeName,orderNum from t_blogtype limit #{start},#{end}
+  	</select>
+  	<!-- 记录总的博客类型数量 -->
+  	<select id="getTotal">
+  		select count(id) from t_blogtype
+  	</select>
+  </mapper>
